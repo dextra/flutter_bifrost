@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="first_title">First</string>
+    <string name="second_title">Second</string>
+    <string name="native_title">Native</string>
+    <string name="native_fragment">Native Fragment</string>
+</resources>
