@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 
 import 'bifrost_manager.dart';
 import 'bifrost_settings.dart';
+import 'log.dart';
 
 class BifrostContainer extends Navigator {
   final BifrostSettings settings;
@@ -63,8 +64,8 @@ class BifrostContainer extends Navigator {
           container.key as GlobalKey<BifrostContainerState>;
       return globalKey.currentState;
     }
-    assert(false,
-        'key of BifrostContainer must be GlobalKey<BifrostContainerState>');
+    log('key of BifrostContainer must be GlobalKey<BifrostContainerState>',
+        level: Level.WARNING);
     return null;
   }
 

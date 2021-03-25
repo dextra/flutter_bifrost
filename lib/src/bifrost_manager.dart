@@ -46,8 +46,8 @@ class BifrostManagerState extends State<BifrostManager> {
 
   /// create page container if need
   void createPageContainerIfNeed(Map<String, dynamic> arguments) {
-    assert(arguments['id'] as int != null);
-    assert(arguments['route'] as String != null);
+    assert(arguments['id'] != null);
+    assert(arguments['route'] != null);
     final container = BifrostSettings.from(
       navigator: initialNavigator,
       arguments: arguments,
