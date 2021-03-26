@@ -32,7 +32,7 @@ Widget build(BuildContext context) {
 }
 ```
 
-Invoke method on common method channel
+Invoke a method of the native layer, from your Flutter code
 
 ``` dart
 final appVersion = await BifrostChannels.common.invokeMethod('getAppVersion');
