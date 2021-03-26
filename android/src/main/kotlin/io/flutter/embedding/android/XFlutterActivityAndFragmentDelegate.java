@@ -1,4 +1,5 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
+// Copyright 2021 The Bifrost Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -19,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.Lifecycle;
+
+import br.com.dextra.bifrost.BifrostSnapshotSplashScreen;
 import io.flutter.FlutterInjector;
 import io.flutter.Log;
 import io.flutter.app.FlutterActivity;
@@ -83,7 +86,7 @@ import java.util.Arrays;
 
   // bifrost implementation
   @Nullable private View reattachView;
-  @Nullable private XFlutterViewSnapshotSplashScreen reAttachSplashScreen;
+  @Nullable private BifrostSnapshotSplashScreen reAttachSplashScreen;
 
   @NonNull
   private final FlutterUiDisplayListener flutterUiDisplayListener =
@@ -147,7 +150,7 @@ import java.util.Arrays;
     // }
     isDetached = true;
 
-    reAttachSplashScreen = new XFlutterViewSnapshotSplashScreen(flutterEngine);
+    reAttachSplashScreen = new BifrostSnapshotSplashScreen(flutterEngine);
 
     flutterView.detachFromFlutterEngine();
     flutterView.removeOnFirstFrameRenderedListener(flutterUiDisplayListener);
