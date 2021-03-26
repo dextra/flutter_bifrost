@@ -1,6 +1,6 @@
 # Bifrost
 
-Bifrost is a plugin which enables hybrid integration of Flutter for your existing native apps.
+Bifrost is a plugin which enables easy embedding of your Flutter application into your existing native apps.
 
 ## Requirements
 
