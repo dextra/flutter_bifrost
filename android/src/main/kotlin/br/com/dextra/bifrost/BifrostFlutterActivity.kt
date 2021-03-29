@@ -3,12 +3,12 @@ package br.com.dextra.bifrost
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import io.flutter.embedding.android.XFlutterActivity
+import io.flutter.embedding.android.CustomFlutterActivity
 import io.flutter.embedding.android.SplashScreen
 import io.flutter.embedding.engine.FlutterEngine
 import java.io.Serializable
 
-open class BifrostFlutterActivity : XFlutterActivity() {
+open class BifrostFlutterActivity : CustomFlutterActivity() {
 
   companion object {
     @JvmStatic

@@ -31,7 +31,7 @@ import io.flutter.plugin.platform.PlatformPlugin;
 /**
  * {@code Fragment} which displays a Flutter UI that takes up all available {@code Fragment} space.
  *
- * <p>Using a {@code XFlutterFragment} requires forwarding a number of calls from an {@code
+ * <p>Using a {@code CustomFlutterFragment} requires forwarding a number of calls from an {@code
  * Activity} to ensure that the internal Flutter app behaves as expected:
  *
  * <ol>
@@ -49,13 +49,13 @@ import io.flutter.plugin.platform.PlatformPlugin;
  * method is invoked then this {@code Fragment} will never receive its {@link
  * Fragment#onActivityResult(int, int, Intent)} callback.
  *
- * <p>If convenient, consider using a {@link FlutterActivity} instead of a {@code XFlutterFragment}
+ * <p>If convenient, consider using a {@link FlutterActivity} instead of a {@code CustomFlutterFragment}
  * to avoid the work of forwarding calls.
  *
- * <p>{@code XFlutterFragment} supports the use of an existing, cached {@link FlutterEngine}. To use
+ * <p>{@code CustomFlutterFragment} supports the use of an existing, cached {@link FlutterEngine}. To use
  * a cached {@link FlutterEngine}, ensure that the {@link FlutterEngine} is stored in {@link
  * FlutterEngineCache} and then use {@link #withCachedEngine(String)} to build a {@code
- * XFlutterFragment} with the cached {@link FlutterEngine}'s ID.
+ * CustomFlutterFragment} with the cached {@link FlutterEngine}'s ID.
  *
  * <p>It is generally recommended to use a cached {@link FlutterEngine} to avoid a momentary delay
  * when initializing a new {@link FlutterEngine}. The two exceptions to using a cached {@link
@@ -64,7 +64,7 @@ import io.flutter.plugin.platform.PlatformPlugin;
  * <p>
  *
  * <ul>
- *   <li>When {@code XFlutterFragment} is in the first {@code Activity} displayed by the app,
+ *   <li>When {@code CustomFlutterFragment} is in the first {@code Activity} displayed by the app,
  *       because pre-warming a {@link FlutterEngine} would have no impact in this situation.
  *   <li>When you are unsure when/if you will need to display a Flutter experience.
  * </ul>
@@ -86,8 +86,8 @@ import io.flutter.plugin.platform.PlatformPlugin;
  * FlutterView}. Using a {@link FlutterView} requires forwarding some calls from an {@code
  * Activity}, as well as forwarding lifecycle calls from an {@code Activity} or a {@code Fragment}.
  */
-public class XFlutterFragment extends Fragment implements XFlutterActivityAndFragmentDelegate.Host {
-  private static final String TAG = "XFlutterFragment";
+public class CustomFlutterFragment extends Fragment implements CustomFlutterActivityAndFragmentDelegate.Host {
+  private static final String TAG = "CustomFlutterFragment";
 
   /** The Dart entrypoint method name that is executed upon initialization. */
   protected static final String ARG_DART_ENTRYPOINT = "dart_entrypoint";
@@ -97,11 +97,11 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   protected static final String ARG_APP_BUNDLE_PATH = "app_bundle_path";
   /** Flutter shell arguments. */
   protected static final String ARG_FLUTTER_INITIALIZATION_ARGS = "initialization_args";
-  /** {@link RenderMode} to be used for the {@link FlutterView} in this {@code XFlutterFragment} */
+  /** {@link RenderMode} to be used for the {@link FlutterView} in this {@code CustomFlutterFragment} */
   protected static final String ARG_FLUTTERVIEW_RENDER_MODE = "flutterview_render_mode";
   /**
    * {@link TransparencyMode} to be used for the {@link FlutterView} in this {@code
-   * XFlutterFragment}
+   * CustomFlutterFragment}
    */
   protected static final String ARG_FLUTTERVIEW_TRANSPARENCY_MODE = "flutterview_transparency_mode";
   /** See {@link #shouldAttachEngineToActivity()}. */
@@ -109,13 +109,13 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
       "should_attach_engine_to_activity";
   /**
    * The ID of a {@link FlutterEngine} cached in {@link FlutterEngineCache} that will be used within
-   * the created {@code XFlutterFragment}.
+   * the created {@code CustomFlutterFragment}.
    */
   protected static final String ARG_CACHED_ENGINE_ID = "cached_engine_id";
   /**
-   * True if the {@link FlutterEngine} in the created {@code XFlutterFragment} should be destroyed
-   * when the {@code XFlutterFragment} is destroyed, false if the {@link FlutterEngine} should
-   * outlive the {@code XFlutterFragment}.
+   * True if the {@link FlutterEngine} in the created {@code CustomFlutterFragment} should be destroyed
+   * when the {@code CustomFlutterFragment} is destroyed, false if the {@link FlutterEngine} should
+   * outlive the {@code CustomFlutterFragment}.
    */
   protected static final String ARG_DESTROY_ENGINE_WITH_FRAGMENT = "destroy_engine_with_fragment";
   /**
@@ -125,10 +125,10 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   protected static final String ARG_ENABLE_STATE_RESTORATION = "enable_state_restoration";
 
   /**
-   * Creates a {@code XFlutterFragment} with a default configuration.
+   * Creates a {@code CustomFlutterFragment} with a default configuration.
    *
-   * <p>{@code XFlutterFragment}'s default configuration creates a new {@link FlutterEngine} within
-   * the {@code XFlutterFragment} and uses the following settings:
+   * <p>{@code CustomFlutterFragment}'s default configuration creates a new {@link FlutterEngine} within
+   * the {@code CustomFlutterFragment} and uses the following settings:
    *
    * <ul>
    *   <li>Dart entrypoint: "main"
@@ -143,12 +143,12 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
    * #withCachedEngine(String)}.
    */
   @NonNull
-  public static XFlutterFragment createDefault() {
+  public static CustomFlutterFragment createDefault() {
     return new NewEngineFragmentBuilder().build();
   }
 
   /**
-   * Returns a {@link NewEngineFragmentBuilder} to create a {@code XFlutterFragment} with a new
+   * Returns a {@link NewEngineFragmentBuilder} to create a {@code CustomFlutterFragment} with a new
    * {@link FlutterEngine} and a desired engine configuration.
    */
   @NonNull
@@ -157,38 +157,38 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   }
 
   /**
-   * Builder that creates a new {@code XFlutterFragment} with {@code arguments} that correspond to
+   * Builder that creates a new {@code CustomFlutterFragment} with {@code arguments} that correspond to
    * the values set on this {@code NewEngineFragmentBuilder}.
    *
-   * <p>To create a {@code XFlutterFragment} with default {@code arguments}, invoke {@link
+   * <p>To create a {@code CustomFlutterFragment} with default {@code arguments}, invoke {@link
    * #createDefault()}.
    *
-   * <p>Subclasses of {@code XFlutterFragment} that do not introduce any new arguments can use this
+   * <p>Subclasses of {@code CustomFlutterFragment} that do not introduce any new arguments can use this
    * {@code NewEngineFragmentBuilder} to construct instances of the subclass without subclassing
    * this {@code NewEngineFragmentBuilder}. {@code MyFlutterFragment f = new
-   * XFlutterFragment.NewEngineFragmentBuilder(MyFlutterFragment.class) .someProperty(...)
+   * CustomFlutterFragment.NewEngineFragmentBuilder(MyFlutterFragment.class) .someProperty(...)
    * .someOtherProperty(...) .build<MyFlutterFragment>(); }
    *
-   * <p>Subclasses of {@code XFlutterFragment} that introduce new arguments should subclass this
+   * <p>Subclasses of {@code CustomFlutterFragment} that introduce new arguments should subclass this
    * {@code NewEngineFragmentBuilder} to add the new properties:
    *
    * <ol>
-   *   <li>Ensure the {@code XFlutterFragment} subclass has a no-arg constructor.
+   *   <li>Ensure the {@code CustomFlutterFragment} subclass has a no-arg constructor.
    *   <li>Subclass this {@code NewEngineFragmentBuilder}.
    *   <li>Override the new {@code NewEngineFragmentBuilder}'s no-arg constructor and invoke the
-   *       super constructor to set the {@code XFlutterFragment} subclass: {@code public MyBuilder()
+   *       super constructor to set the {@code CustomFlutterFragment} subclass: {@code public MyBuilder()
    *       { super(MyFlutterFragment.class); } }
    *   <li>Add appropriate property methods for the new properties.
    *   <li>Override {@link NewEngineFragmentBuilder#createArgs()}, call through to the super method,
    *       then add the new properties as arguments in the {@link Bundle}.
    * </ol>
    *
-   * <p>Once a {@code NewEngineFragmentBuilder} subclass is defined, the {@code XFlutterFragment}
+   * <p>Once a {@code NewEngineFragmentBuilder} subclass is defined, the {@code CustomFlutterFragment}
    * subclass can be instantiated as follows. {@code MyFlutterFragment f = new MyBuilder()
    * .someExistingProperty(...) .someNewProperty(...) .build<MyFlutterFragment>(); }
    */
   public static class NewEngineFragmentBuilder {
-    private final Class<? extends XFlutterFragment> fragmentClass;
+    private final Class<? extends CustomFlutterFragment> fragmentClass;
     private String dartEntrypoint = "main";
     private String initialRoute = "/";
     private String appBundlePath = null;
@@ -199,17 +199,17 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
 
     /**
      * Constructs a {@code NewEngineFragmentBuilder} that is configured to construct an instance of
-     * {@code XFlutterFragment}.
+     * {@code CustomFlutterFragment}.
      */
     public NewEngineFragmentBuilder() {
-      fragmentClass = XFlutterFragment.class;
+      fragmentClass = CustomFlutterFragment.class;
     }
 
     /**
      * Constructs a {@code NewEngineFragmentBuilder} that is configured to construct an instance of
-     * {@code subclass}, which extends {@code XFlutterFragment}.
+     * {@code subclass}, which extends {@code CustomFlutterFragment}.
      */
-    public NewEngineFragmentBuilder(@NonNull Class<? extends XFlutterFragment> subclass) {
+    public NewEngineFragmentBuilder(@NonNull Class<? extends CustomFlutterFragment> subclass) {
       fragmentClass = subclass;
     }
 
@@ -221,7 +221,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
     }
 
     /**
-     * The initial route that a Flutter app will render in this {@link XFlutterFragment}, defaults
+     * The initial route that a Flutter app will render in this {@link CustomFlutterFragment}, defaults
      * to "/".
      */
     @NonNull
@@ -272,19 +272,19 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
     }
 
     /**
-     * Whether or not this {@code XFlutterFragment} should automatically attach its {@code Activity}
+     * Whether or not this {@code CustomFlutterFragment} should automatically attach its {@code Activity}
      * as a control surface for its {@link FlutterEngine}.
      *
      * <p>Control surfaces are used to provide Android resources and lifecycle events to plugins
      * that are attached to the {@link FlutterEngine}. If {@code shouldAttachEngineToActivity} is
-     * true then this {@code XFlutterFragment} will connect its {@link FlutterEngine} to the
+     * true then this {@code CustomFlutterFragment} will connect its {@link FlutterEngine} to the
      * surrounding {@code Activity}, along with any plugins that are registered with that {@link
      * FlutterEngine}. This allows plugins to access the {@code Activi ty}, as well as receive
      * {@code Activity}-specific calls, e.g., {@link android.app.Activity#onNewIntent(Intent)}. If
-     * {@code shouldAttachEngineToActivity} is false, then this {@code XFlutterFragment} will not
+     * {@code shouldAttachEngineToActivity} is false, then this {@code CustomFlutterFragment} will not
      * automatically manage the connection between its {@link FlutterEngine} and the surrounding
      * {@code Activity}. The {@code Activity} will need to be manually connected to this {@code
-     * XFlutterFragment}'s {@link FlutterEngine} by the app developer. See {@link
+     * CustomFlutterFragment}'s {@link FlutterEngine} by the app developer. See {@link
      * FlutterEngine#getActivityControlSurface()}.
      *
      * <p>One reason that a developer might choose to manually manage the relationship between the
@@ -293,13 +293,13 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
      * to outlive the surrounding {@code Activity} so that it can be used later in a different
      * {@code Activity}. To accomplish this, the {@link FlutterEngine} will need to be disconnected
      * from the surrounding {@code Activity} at an unusual time, preventing this {@code
-     * XFlutterFragment} from correctly managing the relationship between the {@link FlutterEngine}
+     * CustomFlutterFragment} from correctly managing the relationship between the {@link FlutterEngine}
      * and the surrounding {@code Activity}.
      *
      * <p>Another reason that a developer might choose to manually manage the relationship between
      * the {@code Activity} and {@link FlutterEngine} is if the developer wants to prevent, or
      * explicitly control when the {@link FlutterEngine}'s plugins have access to the surrounding
-     * {@code Activity}. For example, imagine that this {@code XFlutterFragment} only takes up part
+     * {@code Activity}. For example, imagine that this {@code CustomFlutterFragment} only takes up part
      * of the screen and the app developer wants to ensure that none of the Flutter plugins are able
      * to manipulate the surrounding {@code Activity}. In this case, the developer would not want
      * the {@link FlutterEngine} to have access to the {@code Activity}, which can be accomplished
@@ -313,7 +313,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
     }
 
     /**
-     * Creates a {@link Bundle} of arguments that are assigned to the new {@code XFlutterFragment}.
+     * Creates a {@link Bundle} of arguments that are assigned to the new {@code CustomFlutterFragment}.
      *
      * <p>Subclasses should override this method to add new properties to the {@link Bundle}.
      * Subclasses must call through to the super method to collect all existing property values.
@@ -341,17 +341,17 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
     }
 
     /**
-     * Constructs a new {@code XFlutterFragment} (or a subclass) that is configured based on
+     * Constructs a new {@code CustomFlutterFragment} (or a subclass) that is configured based on
      * properties set on this {@code Builder}.
      */
     @NonNull
-    public <T extends XFlutterFragment> T build() {
+    public <T extends CustomFlutterFragment> T build() {
       try {
         @SuppressWarnings("unchecked")
         T frag = (T) fragmentClass.getDeclaredConstructor().newInstance();
         if (frag == null) {
           throw new RuntimeException(
-              "The XFlutterFragment subclass sent in the constructor ("
+              "The CustomFlutterFragment subclass sent in the constructor ("
                   + fragmentClass.getCanonicalName()
                   + ") does not match the expected return type.");
         }
@@ -362,20 +362,20 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
         return frag;
       } catch (Exception e) {
         throw new RuntimeException(
-            "Could not instantiate XFlutterFragment subclass (" + fragmentClass.getName() + ")", e);
+            "Could not instantiate CustomFlutterFragment subclass (" + fragmentClass.getName() + ")", e);
       }
     }
   }
 
   /**
-   * Returns a {@link CachedEngineFragmentBuilder} to create a {@code XFlutterFragment} with a
+   * Returns a {@link CachedEngineFragmentBuilder} to create a {@code CustomFlutterFragment} with a
    * cached {@link FlutterEngine} in {@link FlutterEngineCache}.
    *
    * <p>An {@code IllegalStateException} will be thrown during the lifecycle of the {@code
-   * XFlutterFragment} if a cached {@link FlutterEngine} is requested but does not exist in the
+   * CustomFlutterFragment} if a cached {@link FlutterEngine} is requested but does not exist in the
    * cache.
    *
-   * <p>To create a {@code XFlutterFragment} that uses a new {@link FlutterEngine}, use {@link
+   * <p>To create a {@code CustomFlutterFragment} that uses a new {@link FlutterEngine}, use {@link
    * #createDefault()} or {@link #withNewEngine()}.
    */
   @NonNull
@@ -384,35 +384,35 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   }
 
   /**
-   * Builder that creates a new {@code XFlutterFragment} that uses a cached {@link FlutterEngine}
+   * Builder that creates a new {@code CustomFlutterFragment} that uses a cached {@link FlutterEngine}
    * with {@code arguments} that correspond to the values set on this {@code Builder}.
    *
-   * <p>Subclasses of {@code XFlutterFragment} that do not introduce any new arguments can use this
+   * <p>Subclasses of {@code CustomFlutterFragment} that do not introduce any new arguments can use this
    * {@code Builder} to construct instances of the subclass without subclassing this {@code
    * Builder}. {@code MyFlutterFragment f = new
-   * XFlutterFragment.CachedEngineFragmentBuilder(MyFlutterFragment.class) .someProperty(...)
+   * CustomFlutterFragment.CachedEngineFragmentBuilder(MyFlutterFragment.class) .someProperty(...)
    * .someOtherProperty(...) .build<MyFlutterFragment>(); }
    *
-   * <p>Subclasses of {@code XFlutterFragment} that introduce new arguments should subclass this
+   * <p>Subclasses of {@code CustomFlutterFragment} that introduce new arguments should subclass this
    * {@code CachedEngineFragmentBuilder} to add the new properties:
    *
    * <ol>
-   *   <li>Ensure the {@code XFlutterFragment} subclass has a no-arg constructor.
+   *   <li>Ensure the {@code CustomFlutterFragment} subclass has a no-arg constructor.
    *   <li>Subclass this {@code CachedEngineFragmentBuilder}.
    *   <li>Override the new {@code CachedEngineFragmentBuilder}'s no-arg constructor and invoke the
-   *       super constructor to set the {@code XFlutterFragment} subclass: {@code public MyBuilder()
+   *       super constructor to set the {@code CustomFlutterFragment} subclass: {@code public MyBuilder()
    *       { super(MyFlutterFragment.class); } }
    *   <li>Add appropriate property methods for the new properties.
    *   <li>Override {@link CachedEngineFragmentBuilder#createArgs()}, call through to the super
    *       method, then add the new properties as arguments in the {@link Bundle}.
    * </ol>
    *
-   * <p>Once a {@code CachedEngineFragmentBuilder} subclass is defined, the {@code XFlutterFragment}
+   * <p>Once a {@code CachedEngineFragmentBuilder} subclass is defined, the {@code CustomFlutterFragment}
    * subclass can be instantiated as follows. {@code MyFlutterFragment f = new MyBuilder()
    * .someExistingProperty(...) .someNewProperty(...) .build<MyFlutterFragment>(); }
    */
   public static class CachedEngineFragmentBuilder {
-    private final Class<? extends XFlutterFragment> fragmentClass;
+    private final Class<? extends CustomFlutterFragment> fragmentClass;
     private final String engineId;
     private boolean destroyEngineWithFragment = false;
     private RenderMode renderMode = RenderMode.surface;
@@ -420,19 +420,19 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
     private boolean shouldAttachEngineToActivity = true;
 
     private CachedEngineFragmentBuilder(@NonNull String engineId) {
-      this(XFlutterFragment.class, engineId);
+      this(CustomFlutterFragment.class, engineId);
     }
 
     protected CachedEngineFragmentBuilder(
-        @NonNull Class<? extends XFlutterFragment> subclass, @NonNull String engineId) {
+            @NonNull Class<? extends CustomFlutterFragment> subclass, @NonNull String engineId) {
       this.fragmentClass = subclass;
       this.engineId = engineId;
     }
 
     /**
      * Pass {@code true} to destroy the cached {@link FlutterEngine} when this {@code
-     * XFlutterFragment} is destroyed, or {@code false} for the cached {@link FlutterEngine} to
-     * outlive this {@code XFlutterFragment}.
+     * CustomFlutterFragment} is destroyed, or {@code false} for the cached {@link FlutterEngine} to
+     * outlive this {@code CustomFlutterFragment}.
      */
     @NonNull
     public CachedEngineFragmentBuilder destroyEngineWithFragment(
@@ -467,19 +467,19 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
     }
 
     /**
-     * Whether or not this {@code XFlutterFragment} should automatically attach its {@code Activity}
+     * Whether or not this {@code CustomFlutterFragment} should automatically attach its {@code Activity}
      * as a control surface for its {@link FlutterEngine}.
      *
      * <p>Control surfaces are used to provide Android resources and lifecycle events to plugins
      * that are attached to the {@link FlutterEngine}. If {@code shouldAttachEngineToActivity} is
-     * true then this {@code XFlutterFragment} will connect its {@link FlutterEngine} to the
+     * true then this {@code CustomFlutterFragment} will connect its {@link FlutterEngine} to the
      * surrounding {@code Activity}, along with any plugins that are registered with that {@link
      * FlutterEngine}. This allows plugins to access the {@code Activity}, as well as receive {@code
      * Activity}-specific calls, e.g., {@link android.app.Activity#onNewIntent(Intent)}. If {@code
-     * shouldAttachEngineToActivity} is false, then this {@code XFlutterFragment} will not
+     * shouldAttachEngineToActivity} is false, then this {@code CustomFlutterFragment} will not
      * automatically manage the connection between its {@link FlutterEngine} and the surrounding
      * {@code Activity}. The {@code Activity} will need to be manually connected to this {@code
-     * XFlutterFragment}'s {@link FlutterEngine} by the app developer. See {@link
+     * CustomFlutterFragment}'s {@link FlutterEngine} by the app developer. See {@link
      * FlutterEngine#getActivityControlSurface()}.
      *
      * <p>One reason that a developer might choose to manually manage the relationship between the
@@ -488,13 +488,13 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
      * to outlive the surrounding {@code Activity} so that it can be used later in a different
      * {@code Activity}. To accomplish this, the {@link FlutterEngine} will need to be disconnected
      * from the surrounding {@code Activity} at an unusual time, preventing this {@code
-     * XFlutterFragment} from correctly managing the relationship between the {@link FlutterEngine}
+     * CustomFlutterFragment} from correctly managing the relationship between the {@link FlutterEngine}
      * and the surrounding {@code Activity}.
      *
      * <p>Another reason that a developer might choose to manually manage the relationship between
      * the {@code Activity} and {@link FlutterEngine} is if the developer wants to prevent, or
      * explicitly control when the {@link FlutterEngine}'s plugins have access to the surrounding
-     * {@code Activity}. For example, imagine that this {@code XFlutterFragment} only takes up part
+     * {@code Activity}. For example, imagine that this {@code CustomFlutterFragment} only takes up part
      * of the screen and the app developer wants to ensure that none of the Flutter plugins are able
      * to manipulate the surrounding {@code Activity}. In this case, the developer would not want
      * the {@link FlutterEngine} to have access to the {@code Activity}, which can be accomplished
@@ -508,7 +508,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
     }
 
     /**
-     * Creates a {@link Bundle} of arguments that are assigned to the new {@code XFlutterFragment}.
+     * Creates a {@link Bundle} of arguments that are assigned to the new {@code CustomFlutterFragment}.
      *
      * <p>Subclasses should override this method to add new properties to the {@link Bundle}.
      * Subclasses must call through to the super method to collect all existing property values.
@@ -529,17 +529,17 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
     }
 
     /**
-     * Constructs a new {@code XFlutterFragment} (or a subclass) that is configured based on
+     * Constructs a new {@code CustomFlutterFragment} (or a subclass) that is configured based on
      * properties set on this {@code CachedEngineFragmentBuilder}.
      */
     @NonNull
-    public <T extends XFlutterFragment> T build() {
+    public <T extends CustomFlutterFragment> T build() {
       try {
         @SuppressWarnings("unchecked")
         T frag = (T) fragmentClass.getDeclaredConstructor().newInstance();
         if (frag == null) {
           throw new RuntimeException(
-              "The XFlutterFragment subclass sent in the constructor ("
+              "The CustomFlutterFragment subclass sent in the constructor ("
                   + fragmentClass.getCanonicalName()
                   + ") does not match the expected return type.");
         }
@@ -550,17 +550,17 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
         return frag;
       } catch (Exception e) {
         throw new RuntimeException(
-            "Could not instantiate XFlutterFragment subclass (" + fragmentClass.getName() + ")", e);
+            "Could not instantiate CustomFlutterFragment subclass (" + fragmentClass.getName() + ")", e);
       }
     }
   }
 
   // Delegate that runs all lifecycle and OS hook logic that is common between
-  // FlutterActivity and XFlutterFragment. See the XFlutterActivityAndFragmentDelegate
+  // FlutterActivity and CustomFlutterFragment. See the XFlutterActivityAndFragmentDelegate
   // implementation for details about why it exists.
-  @VisibleForTesting /* package */ XFlutterActivityAndFragmentDelegate delegate;
+  @VisibleForTesting /* package */ CustomFlutterActivityAndFragmentDelegate delegate;
 
-  public XFlutterFragment() {
+  public CustomFlutterFragment() {
     // Ensure that we at least have an empty Bundle of arguments so that we don't
     // need to continually check for null arguments before grabbing one.
     setArguments(new Bundle());
@@ -571,20 +571,20 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
    * Fragment through any lifecycle events, because JVM tests cannot handle executing any lifecycle
    * methods, at the time of writing this.
    *
-   * <p>The testing infrastructure should be upgraded to make XFlutterFragment tests easy to write
+   * <p>The testing infrastructure should be upgraded to make CustomFlutterFragment tests easy to write
    * while exercising real lifecycle methods. At such a time, this method should be removed.
    */
   // TODO(mattcarroll): remove this when tests allow for it
   // (https://github.com/flutter/flutter/issues/43798)
   @VisibleForTesting
-  /* package */ void setDelegate(@NonNull XFlutterActivityAndFragmentDelegate delegate) {
+  /* package */ void setDelegate(@NonNull CustomFlutterActivityAndFragmentDelegate delegate) {
     this.delegate = delegate;
   }
 
   @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
-    delegate = new XFlutterActivityAndFragmentDelegate(this);
+    delegate = new CustomFlutterActivityAndFragmentDelegate(this);
     delegate.onAttach(context);
   }
 
@@ -678,7 +678,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
     if (delegate != null) {
       Log.v(
           TAG,
-          "XFlutterFragment "
+          "CustomFlutterFragment "
               + this
               + " connection to the engine "
               + getFlutterEngine()
@@ -812,8 +812,8 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   }
 
   /**
-   * {@link XFlutterActivityAndFragmentDelegate.Host} method that is used by {@link
-   * XFlutterActivityAndFragmentDelegate} to obtain Flutter shell arguments when initializing
+   * {@link CustomFlutterActivityAndFragmentDelegate.Host} method that is used by {@link
+   * CustomFlutterActivityAndFragmentDelegate} to obtain Flutter shell arguments when initializing
    * Flutter.
    */
   @Override
@@ -826,7 +826,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
 
   /**
    * Returns the ID of a statically cached {@link FlutterEngine} to use within this {@code
-   * XFlutterFragment}, or {@code null} if this {@code XFlutterFragment} does not want to use a
+   * CustomFlutterFragment}, or {@code null} if this {@code CustomFlutterFragment} does not want to use a
    * cached {@link FlutterEngine}.
    */
   @Nullable
@@ -836,8 +836,8 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   }
 
   /**
-   * Returns false if the {@link FlutterEngine} within this {@code XFlutterFragment} should outlive
-   * the {@code XFlutterFragment}, itself.
+   * Returns false if the {@link FlutterEngine} within this {@code CustomFlutterFragment} should outlive
+   * the {@code CustomFlutterFragment}, itself.
    *
    * <p>Defaults to true if no custom {@link FlutterEngine is provided}, false if a custom {@link
    * FlutterEngine} is provided.
@@ -857,12 +857,12 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   }
 
   /**
-   * Returns the name of the Dart method that this {@code XFlutterFragment} should execute to start
+   * Returns the name of the Dart method that this {@code CustomFlutterFragment} should execute to start
    * a Flutter app.
    *
    * <p>Defaults to "main".
    *
-   * <p>Used by this {@code XFlutterFragment}'s {@link XFlutterActivityAndFragmentDelegate.Host}
+   * <p>Used by this {@code CustomFlutterFragment}'s {@link CustomFlutterActivityAndFragmentDelegate.Host}
    */
   @Override
   @NonNull
@@ -877,7 +877,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
    * <p>When unspecified, the value is null, which defaults to the app bundle path defined in {@link
    * FlutterLoader#findAppBundlePath()}.
    *
-   * <p>Used by this {@code XFlutterFragment}'s {@link XFlutterActivityAndFragmentDelegate.Host}
+   * <p>Used by this {@code CustomFlutterFragment}'s {@link CustomFlutterActivityAndFragmentDelegate.Host}
    */
   @Override
   @NonNull
@@ -890,7 +890,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
    *
    * <p>Defaults to {@code null}, which signifies a route of "/" in Flutter.
    *
-   * <p>Used by this {@code XFlutterFragment}'s {@link XFlutterActivityAndFragmentDelegate.Host}
+   * <p>Used by this {@code CustomFlutterFragment}'s {@link CustomFlutterActivityAndFragmentDelegate.Host}
    */
   @Override
   @Nullable
@@ -900,11 +900,11 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
 
   /**
    * Returns the desired {@link RenderMode} for the {@link FlutterView} displayed in this {@code
-   * XFlutterFragment}.
+   * CustomFlutterFragment}.
    *
    * <p>Defaults to {@link RenderMode#surface}.
    *
-   * <p>Used by this {@code XFlutterFragment}'s {@link XFlutterActivityAndFragmentDelegate.Host}
+   * <p>Used by this {@code CustomFlutterFragment}'s {@link CustomFlutterActivityAndFragmentDelegate.Host}
    */
   @Override
   @NonNull
@@ -916,11 +916,11 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
 
   /**
    * Returns the desired {@link TransparencyMode} for the {@link FlutterView} displayed in this
-   * {@code XFlutterFragment}.
+   * {@code CustomFlutterFragment}.
    *
    * <p>Defaults to {@link TransparencyMode#transparent}.
    *
-   * <p>Used by this {@code XFlutterFragment}'s {@link XFlutterActivityAndFragmentDelegate.Host}
+   * <p>Used by this {@code CustomFlutterFragment}'s {@link CustomFlutterActivityAndFragmentDelegate.Host}
    */
   @Override
   @NonNull
@@ -946,7 +946,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   /**
    * Hook for subclasses to return a {@link FlutterEngine} with whatever configuration is desired.
    *
-   * <p>By default this method defers to this {@code XFlutterFragment}'s surrounding {@code
+   * <p>By default this method defers to this {@code CustomFlutterFragment}'s surrounding {@code
    * Activity}, if that {@code Activity} implements {@link FlutterEngineProvider}. If this method is
    * overridden, the surrounding {@code Activity} will no longer be given an opportunity to provide
    * a {@link FlutterEngine}, unless the subclass explicitly implements that behavior.
@@ -955,9 +955,9 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
    * typical warm-up time that a new {@link FlutterEngine} instance requires.
    *
    * <p>If null is returned then a new default {@link FlutterEngine} will be created to back this
-   * {@code XFlutterFragment}.
+   * {@code CustomFlutterFragment}.
    *
-   * <p>Used by this {@code XFlutterFragment}'s {@link XFlutterActivityAndFragmentDelegate.Host}
+   * <p>Used by this {@code CustomFlutterFragment}'s {@link CustomFlutterActivityAndFragmentDelegate.Host}
    */
   @Override
   @Nullable
@@ -1013,7 +1013,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
    * {@link FlutterEngineConfigurator}. Subclasses can override this method if the subclass needs to
    * override the {@code FragmentActivity}'s behavior, or add to it.
    *
-   * <p>Used by this {@code XFlutterFragment}'s {@link XFlutterActivityAndFragmentDelegate.Host}
+   * <p>Used by this {@code CustomFlutterFragment}'s {@link CustomFlutterActivityAndFragmentDelegate.Host}
    */
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
@@ -1041,7 +1041,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
    * See {@link NewEngineFragmentBuilder#shouldAttachEngineToActivity()} and {@link
    * CachedEngineFragmentBuilder#shouldAttachEngineToActivity()}.
    *
-   * <p>Used by this {@code XFlutterFragment}'s {@link XFlutterActivityAndFragmentDelegate}
+   * <p>Used by this {@code CustomFlutterFragment}'s {@link CustomFlutterActivityAndFragmentDelegate}
    */
   @Override
   public boolean shouldAttachEngineToActivity() {
@@ -1059,7 +1059,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   }
 
   /**
-   * Invoked after the {@link FlutterView} within this {@code XFlutterFragment} starts rendering
+   * Invoked after the {@link FlutterView} within this {@code CustomFlutterFragment} starts rendering
    * pixels to the screen.
    *
    * <p>This method forwards {@code onFlutterUiDisplayed()} to its attached {@code Activity}, if the
@@ -1067,7 +1067,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
    *
    * <p>Subclasses that override this method must call through to the {@code super} method.
    *
-   * <p>Used by this {@code XFlutterFragment}'s {@link XFlutterActivityAndFragmentDelegate.Host}
+   * <p>Used by this {@code CustomFlutterFragment}'s {@link CustomFlutterActivityAndFragmentDelegate.Host}
    */
   @Override
   public void onFlutterUiDisplayed() {
@@ -1078,7 +1078,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   }
 
   /**
-   * Invoked after the {@link FlutterView} within this {@code XFlutterFragment} stops rendering
+   * Invoked after the {@link FlutterView} within this {@code CustomFlutterFragment} stops rendering
    * pixels to the screen.
    *
    * <p>This method forwards {@code onFlutterUiNoLongerDisplayed()} to its attached {@code
@@ -1086,7 +1086,7 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
    *
    * <p>Subclasses that override this method must call through to the {@code super} method.
    *
-   * <p>Used by this {@code XFlutterFragment}'s {@link XFlutterActivityAndFragmentDelegate.Host}
+   * <p>Used by this {@code CustomFlutterFragment}'s {@link CustomFlutterActivityAndFragmentDelegate.Host}
    */
   @Override
   public void onFlutterUiNoLongerDisplayed() {
@@ -1111,14 +1111,14 @@ public class XFlutterFragment extends Fragment implements XFlutterActivityAndFra
   @Override
   public boolean stillAttachedForEvent(String event) {
     if (delegate.isDetached()) {
-      Log.v(TAG, "XFlutterFragment " + hashCode() + " " + event + " called after release.");
+      Log.v(TAG, "CustomFlutterFragment " + hashCode() + " " + event + " called after release.");
       return false;
     }
     return true;
   }
 
   /**
-   * Annotates methods in {@code XFlutterFragment} that must be called by the containing {@code
+   * Annotates methods in {@code CustomFlutterFragment} that must be called by the containing {@code
    * Activity}.
    */
   @interface ActivityCallThrough {}

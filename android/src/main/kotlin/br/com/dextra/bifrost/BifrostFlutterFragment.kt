@@ -6,11 +6,11 @@ import android.os.Bundle
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.SplashScreen
 import io.flutter.embedding.android.TransparencyMode
-import io.flutter.embedding.android.XFlutterFragment
+import io.flutter.embedding.android.CustomFlutterFragment
 import io.flutter.embedding.engine.FlutterEngine
 import java.io.*
 
-open class BifrostFlutterFragment : XFlutterFragment() {
+open class BifrostFlutterFragment : CustomFlutterFragment() {
 
   companion object {
     @JvmStatic

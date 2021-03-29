@@ -24,7 +24,6 @@ import androidx.lifecycle.Lifecycle;
 import br.com.dextra.bifrost.BifrostSnapshotSplashScreen;
 import io.flutter.FlutterInjector;
 import io.flutter.Log;
-import io.flutter.app.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.FlutterEngineCache;
 import io.flutter.embedding.engine.FlutterShellArgs;
@@ -34,23 +33,23 @@ import io.flutter.plugin.platform.PlatformPlugin;
 import java.util.Arrays;
 
 /**
- * Delegate that implements all Flutter logic that is the same between a {@link FlutterActivity} and
- * a {@link FlutterFragment}.
+ * Delegate that implements all Flutter logic that is the same between a {@link CustomFlutterActivity} and
+ * a {@link CustomFlutterFragment}.
  *
  * <p><strong>Why does this class exist?</strong>
  *
  * <p>One might ask why an {@code Activity} and {@code Fragment} delegate needs to exist. Given that
  * a {@code Fragment} can be placed within an {@code Activity}, it would make more sense to use a
- * {@link FlutterFragment} within a {@link FlutterActivity}.
+ * {@link CustomFlutterFragment} within a {@link CustomFlutterActivity}.
  *
  * <p>The {@code Fragment} support library adds 100k of binary size to an app, and full-Flutter apps
  * do not otherwise require that binary hit. Therefore, it was concluded that Flutter must provide a
- * {@link FlutterActivity} based on the AOSP {@code Activity}, and an independent {@link
- * FlutterFragment} for add-to-app developers.
+ * {@link CustomFlutterActivity} based on the AOSP {@code Activity}, and an independent {@link
+ * CustomFlutterFragment} for add-to-app developers.
  *
  * <p>If a time ever comes where the inclusion of {@code Fragment}s in a full-Flutter app is no
  * longer deemed an issue, this class should be immediately decomposed between {@link
- * FlutterActivity} and {@link FlutterFragment} and then eliminated.
+ * CustomFlutterActivity} and {@link CustomFlutterFragment} and then eliminated.
  *
  * <p><strong>Caution when modifying this class</strong>
  *
@@ -62,20 +61,20 @@ import java.util.Arrays;
  * and optional references that are very difficult to track.
  *
  * <p>Maintainers of this class should take care to only place code in this delegate that would
- * otherwise be placed in either {@link FlutterActivity} or {@link FlutterFragment}, and in exactly
+ * otherwise be placed in either {@link CustomFlutterActivity} or {@link CustomFlutterFragment}, and in exactly
  * the same form. <strong>Do not use this class as a convenient shortcut for any other
  * behavior.</strong>
  */
-/* package */ final class XFlutterActivityAndFragmentDelegate {
-  private static final String TAG = "XFlutterActivityAndFragmentDelegate";
+/* package */ final class CustomFlutterActivityAndFragmentDelegate {
+  private static final String TAG = "CustomFlutterActivityAndFragmentDelegate";
   private static final String FRAMEWORK_RESTORATION_BUNDLE_KEY = "framework";
   private static final String PLUGINS_RESTORATION_BUNDLE_KEY = "plugins";
 
   // bifrost implementation
   static Host currentHost;
 
-  // The FlutterActivity or FlutterFragment that is delegating most of its calls
-  // to this XFlutterActivityAndFragmentDelegate.
+  // The CustomFlutterActivity or CustomFlutterFragment that is delegating most of its calls
+  // to this CustomFlutterActivityAndFragmentDelegate.
   @NonNull private Host host;
   @Nullable private FlutterEngine flutterEngine;
   @Nullable private FlutterSplashView flutterSplashView;
@@ -102,15 +101,15 @@ import java.util.Arrays;
         }
       };
 
-  XFlutterActivityAndFragmentDelegate(@NonNull Host host) {
+  CustomFlutterActivityAndFragmentDelegate(@NonNull Host host) {
     this.host = host;
   }
 
   /**
-   * Disconnects this {@code XFlutterActivityAndFragmentDelegate} from its host {@code Activity} or
+   * Disconnects this {@code CustomFlutterActivityAndFragmentDelegate} from its host {@code Activity} or
    * {@code Fragment}.
    *
-   * <p>No further method invocations may occur on this {@code XFlutterActivityAndFragmentDelegate}
+   * <p>No further method invocations may occur on this {@code CustomFlutterActivityAndFragmentDelegate}
    * after invoking this method. If a method is invoked, an exception will occur.
    *
    * <p>This method only clears out references. It does not destroy its {@link FlutterEngine}. The
@@ -286,7 +285,7 @@ import java.util.Arrays;
     final Activity activity = host.getActivity();
     if (activity == null) {
       throw new AssertionError(
-          "XFlutterActivityAndFragmentDelegate's getAppComponent should only "
+          "CustomFlutterActivityAndFragmentDelegate's getAppComponent should only "
               + "be queried after onAttach, when the host's activity should always be non-null");
     }
     return activity;
@@ -336,7 +335,7 @@ import java.util.Arrays;
     Log.v(
         TAG,
         "No preferred FlutterEngine was provided. Creating a new FlutterEngine for"
-            + " this FlutterFragment.");
+            + " this CustomFlutterFragment.");
     flutterEngine =
         new FlutterEngine(
             host.getContext(),
@@ -528,7 +527,7 @@ import java.util.Arrays;
         platformPlugin.updateSystemUiOverlays();
       }
     } else {
-      Log.w(TAG, "onPostResume() invoked before FlutterFragment was attached to an Activity.");
+      Log.w(TAG, "onPostResume() invoked before CustomFlutterFragment was attached to an Activity.");
     }
   }
 
@@ -662,7 +661,7 @@ import java.util.Arrays;
       Log.v(TAG, "Forwarding onBackPressed() to FlutterEngine.");
       flutterEngine.getNavigationChannel().popRoute();
     } else {
-      Log.w(TAG, "Invoked onBackPressed() before FlutterFragment was attached to an Activity.");
+      Log.w(TAG, "Invoked onBackPressed() before CustomFlutterFragment was attached to an Activity.");
     }
   }
 
@@ -693,7 +692,7 @@ import java.util.Arrays;
     } else {
       Log.w(
           TAG,
-          "onRequestPermissionResult() invoked before FlutterFragment was attached to an Activity.");
+          "onRequestPermissionResult() invoked before CustomFlutterFragment was attached to an Activity.");
     }
   }
 
@@ -711,7 +710,7 @@ import java.util.Arrays;
       Log.v(TAG, "Forwarding onNewIntent() to FlutterEngine.");
       flutterEngine.getActivityControlSurface().onNewIntent(intent);
     } else {
-      Log.w(TAG, "onNewIntent() invoked before FlutterFragment was attached to an Activity.");
+      Log.w(TAG, "onNewIntent() invoked before CustomFlutterFragment was attached to an Activity.");
     }
   }
 
@@ -737,7 +736,7 @@ import java.util.Arrays;
               + data);
       flutterEngine.getActivityControlSurface().onActivityResult(requestCode, resultCode, data);
     } else {
-      Log.w(TAG, "onActivityResult() invoked before FlutterFragment was attached to an Activity.");
+      Log.w(TAG, "onActivityResult() invoked before CustomFlutterFragment was attached to an Activity.");
     }
   }
 
@@ -755,7 +754,7 @@ import java.util.Arrays;
       Log.v(TAG, "Forwarding onUserLeaveHint() to FlutterEngine.");
       flutterEngine.getActivityControlSurface().onUserLeaveHint();
     } else {
-      Log.w(TAG, "onUserLeaveHint() invoked before FlutterFragment was attached to an Activity.");
+      Log.w(TAG, "onUserLeaveHint() invoked before CustomFlutterFragment was attached to an Activity.");
     }
   }
 
@@ -780,7 +779,7 @@ import java.util.Arrays;
         flutterEngine.getSystemChannel().sendMemoryPressureWarning();
       }
     } else {
-      Log.w(TAG, "onTrimMemory() invoked before FlutterFragment was attached to an Activity.");
+      Log.w(TAG, "onTrimMemory() invoked before CustomFlutterFragment was attached to an Activity.");
     }
   }
 
@@ -807,13 +806,13 @@ import java.util.Arrays;
   private void ensureAlive() {
     if (host == null) {
       throw new IllegalStateException(
-          "Cannot execute method on a destroyed XFlutterActivityAndFragmentDelegate.");
+          "Cannot execute method on a destroyed CustomFlutterActivityAndFragmentDelegate.");
     }
   }
 
   /**
-   * The {@link FlutterActivity} or {@link FlutterFragment} that owns this {@code
-   * XFlutterActivityAndFragmentDelegate}.
+   * The {@link CustomFlutterActivity} or {@link CustomFlutterFragment} that owns this {@code
+   * CustomCustomFlutterActivityAndFragmentDelegate}.
    */
   /* package */ interface Host
       extends SplashScreenProvider, FlutterEngineProvider, FlutterEngineConfigurator {
@@ -848,7 +847,7 @@ import java.util.Arrays;
      * Returns true if the {@link FlutterEngine} used in this delegate should be destroyed when the
      * host/delegate are destroyed.
      *
-     * <p>The default value is {@code true} in cases where {@code FlutterFragment} created its own
+     * <p>The default value is {@code true} in cases where {@code CustomFlutterFragment} created its own
      * {@link FlutterEngine}, and {@code false} in cases where a cached {@link FlutterEngine} was
      * provided.
      */
