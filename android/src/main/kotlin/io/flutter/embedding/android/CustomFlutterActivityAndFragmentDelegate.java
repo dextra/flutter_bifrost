@@ -124,9 +124,9 @@ import java.util.Arrays;
 
   // bifrost implementation
   void detach() {
-    assert flutterView != null;
-    assert flutterSplashView != null;
-    assert flutterEngine != null;
+    if (flutterView == null || flutterSplashView == null || flutterEngine == null) {
+      return;
+    }
 
     Log.w(TAG, "detach " + flutterView.toString());
 
@@ -175,9 +175,9 @@ import java.util.Arrays;
 
   // bifrost implementation
   void reattach() {
-    assert flutterView != null;
-    assert flutterSplashView != null;
-    assert flutterEngine != null;
+    if (flutterView == null || flutterSplashView == null || flutterEngine == null) {
+      return;
+    }
 
     Log.w(TAG, "reattach " + flutterView.toString());
 
