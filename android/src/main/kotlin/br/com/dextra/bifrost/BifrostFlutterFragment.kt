@@ -73,7 +73,7 @@ open class BifrostFlutterFragment : CustomFlutterFragment() {
     get() = arguments?.getString(BifrostConstants.ROUTE) ?: ""
 
   private val pageArguments: Serializable?
-    get() = arguments?.getString(BifrostConstants.ARGUMENTS)
+    get() = arguments?.getSerializable(BifrostConstants.ARGUMENTS)
 
   private val pageData: HashMap<String, Any?>
     get() = hashMapOf("id" to pageId, "route" to pageRoute, "arguments" to pageArguments)
