@@ -70,7 +70,7 @@ open class BifrostFlutterFragment : CustomFlutterFragment() {
     get() = arguments?.getInt(BifrostConstants.ID) ?: 0
 
   private val pageRoute: String
-    get() = arguments?.getString(BifrostConstants.ROUTE) ?: ""
+    get() = arguments?.getString(BifrostConstants.ROUTE) ?: "/"
 
   private val pageArguments: Serializable?
     get() = arguments?.getSerializable(BifrostConstants.ARGUMENTS)

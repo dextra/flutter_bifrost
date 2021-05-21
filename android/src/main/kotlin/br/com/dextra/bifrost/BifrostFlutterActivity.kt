@@ -55,7 +55,7 @@ open class BifrostFlutterActivity : CustomFlutterActivity() {
     get() = intent.getIntExtra(BifrostConstants.ID, 0)
 
   private val pageRoute: String
-    get() = intent.getStringExtra(BifrostConstants.ROUTE) ?: ""
+    get() = intent.getStringExtra(BifrostConstants.ROUTE) ?: "/"
 
   private val pageArguments: Serializable?
     get() = intent.getSerializableExtra(BifrostConstants.ARGUMENTS)
