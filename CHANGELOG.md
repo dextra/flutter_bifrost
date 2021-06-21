@@ -1,4 +1,4 @@
-## 0.0.3
+## 0.1.0
  - Add Null Safety Support
 
 ## 0.0.2
