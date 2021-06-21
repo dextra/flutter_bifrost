@@ -37,11 +37,15 @@ class SecondPage extends StatelessWidget {
                 animation: controller,
                 builder: (context, widget) {
                   final enableButton = controller.text.isNotEmpty;
-                  return RaisedButton(
+                  return ElevatedButton(
                     child: Text('Show Greetings'),
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    color: Colors.deepPurpleAccent,
-                    textColor: Colors.white,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      primary: Colors.deepPurpleAccent,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     onPressed: enableButton ? openGreetingsPage : null,
                   );
                 },
