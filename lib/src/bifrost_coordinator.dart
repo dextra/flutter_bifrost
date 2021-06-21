@@ -16,10 +16,16 @@ class BifrostCoordinator {
     log('method: ${call.method}, arguments: ${call.arguments}');
 
     final arguments = (call.arguments as Map?)?.cast<String, dynamic>();
-    assert(arguments != null);
+    if (arguments == null) {
+      throw MissingPluginException(
+          'Call arguments are required and must be a Map<String, dynamic>.');
+    }
 
-    final id = arguments!['id'] as int?;
-    assert(id != null);
+    final id = arguments['id'] as int?;
+    if (id == null) {
+      throw MissingPluginException(
+          'The `id` argument is required and must be an integer.');
+    }
 
     switch (call.method) {
       case 'onCreatePage':
@@ -27,16 +33,16 @@ class BifrostCoordinator {
         return true;
       case 'onShowPage':
         manager.createPageContainerIfNeed(arguments);
-        manager.showPageContainer(id!);
+        manager.showPageContainer(id);
         return true;
       case 'onDeallocPage':
-        manager.deallocPageContainer(id!);
+        manager.deallocPageContainer(id);
         return true;
       case 'onBackPressed':
-        manager.onBackPressed(id!);
+        manager.onBackPressed(id);
         return true;
       case 'canPop':
-        return manager.canPop(id!);
+        return manager.canPop(id);
       default:
         return false;
     }
