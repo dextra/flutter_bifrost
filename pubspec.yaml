@@ -1,6 +1,6 @@
 name: bifrost
 description: Bifrost is a plugin which enables hybrid integration of Flutter for your existing native apps.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/dextra/flutter_bifrost
 
 environment:

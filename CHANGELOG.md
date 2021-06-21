@@ -1,3 +1,6 @@
+## 0.0.3
+ - Add Null Safety Support
+
 ## 0.0.2
  - Fix crashes and warnings
  - Fix Android default initial routes
