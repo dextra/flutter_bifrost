@@ -12,18 +12,18 @@ class BifrostContainer extends Navigator {
   final BifrostSettings settings;
 
   const BifrostContainer({
-    GlobalKey<BifrostContainerState> key,
-    String initialRoute,
-    RouteFactory onGenerateRoute,
-    RouteFactory onUnknownRoute,
-    List<NavigatorObserver> observers,
-    this.settings,
+    GlobalKey<BifrostContainerState>? key,
+    String? initialRoute,
+    RouteFactory? onGenerateRoute,
+    RouteFactory? onUnknownRoute,
+    List<NavigatorObserver>? observers,
+    required this.settings,
   }) : super(
           key: key,
           initialRoute: initialRoute,
           onGenerateRoute: onGenerateRoute,
           onUnknownRoute: onUnknownRoute,
-          observers: observers,
+          observers: observers ?? const [],
         );
 
   factory BifrostContainer.obtain(
@@ -49,7 +49,7 @@ class BifrostContainer extends Navigator {
               arguments: bifrostSettings.arguments,
             );
           }
-          return initialNavigator.onGenerateRoute(routeSettings);
+          return initialNavigator.onGenerateRoute?.call(routeSettings);
         },
         onUnknownRoute: initialNavigator.onUnknownRoute,
         observers: <NavigatorObserver>[
@@ -58,7 +58,7 @@ class BifrostContainer extends Navigator {
         ],
       );
 
-  static BifrostContainerState stateOf(BifrostContainer container) {
+  static BifrostContainerState? stateOf(BifrostContainer container) {
     if (container.key is GlobalKey<BifrostContainerState>) {
       final GlobalKey<BifrostContainerState> globalKey =
           container.key as GlobalKey<BifrostContainerState>;
@@ -74,7 +74,7 @@ class BifrostContainer extends Navigator {
 }
 
 class BifrostContainerState extends NavigatorState {
-  VoidCallback _backPressedHandler;
+  VoidCallback? _backPressedHandler;
 
   @override
   BifrostContainer get widget => super.widget as BifrostContainer;
@@ -90,12 +90,12 @@ class BifrostContainerState extends NavigatorState {
   void performBackPressed() => _backPressedHandler?.call();
 
   @override
-  void pop<T extends Object>([T result]) {
+  void pop<T extends Object?>([T? result]) {
     if (canPop()) {
       super.pop<T>(result);
     } else {
       if (Platform.isIOS) {
-        BifrostManager.of(context).popViewController();
+        BifrostManager.of(context)?.popViewController();
       } else {
         SystemNavigator.pop();
       }
@@ -103,7 +103,7 @@ class BifrostContainerState extends NavigatorState {
   }
 
   @override
-  Future<bool> maybePop<T extends Object>([T result]) async {
+  Future<bool> maybePop<T extends Object?>([T? result]) async {
     final maybe = await super.maybePop(result);
     if (!maybe) {
       pop(result);

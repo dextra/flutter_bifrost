@@ -15,10 +15,10 @@ class BifrostCoordinator {
   Future<bool> _handler(MethodCall call) async {
     log('method: ${call.method}, arguments: ${call.arguments}');
 
-    final arguments = (call.arguments as Map).cast<String, dynamic>();
+    final arguments = (call.arguments as Map?)?.cast<String, dynamic>();
     assert(arguments != null);
 
-    final id = arguments['id'] as int;
+    final id = arguments!['id'] as int?;
     assert(id != null);
 
     switch (call.method) {
@@ -27,16 +27,16 @@ class BifrostCoordinator {
         return true;
       case 'onShowPage':
         manager.createPageContainerIfNeed(arguments);
-        manager.showPageContainer(id);
+        manager.showPageContainer(id!);
         return true;
       case 'onDeallocPage':
-        manager.deallocPageContainer(id);
+        manager.deallocPageContainer(id!);
         return true;
       case 'onBackPressed':
-        manager.onBackPressed(id);
+        manager.onBackPressed(id!);
         return true;
       case 'canPop':
-        return manager.canPop(id);
+        return manager.canPop(id!);
       default:
         return false;
     }

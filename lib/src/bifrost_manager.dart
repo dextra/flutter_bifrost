@@ -9,7 +9,7 @@ class BifrostManager extends StatefulWidget {
 
   const BifrostManager(this.initialNavigator);
 
-  static BifrostManagerState of(BuildContext context) {
+  static BifrostManagerState? of(BuildContext context) {
     if (context is StatefulElement && context.state is BifrostManagerState) {
       return context.state as BifrostManagerState;
     }
@@ -23,9 +23,9 @@ class BifrostManager extends StatefulWidget {
 class BifrostManagerState extends State<BifrostManager> {
   final List<BifrostContainer> _containers = <BifrostContainer>[];
 
-  BifrostCoordinator _coordinator;
+  late BifrostCoordinator _coordinator;
 
-  int _index;
+  int? _index;
 
   Navigator get initialNavigator => widget.initialNavigator;
 
@@ -63,7 +63,7 @@ class BifrostManagerState extends State<BifrostManager> {
   void _createDefaultPageContainer() {
     final bifrostSettings = BifrostSettings.from(navigator: initialNavigator);
     final routeSettings = RouteSettings(name: bifrostSettings.route);
-    if (initialNavigator.onGenerateRoute(routeSettings) != null) {
+    if (initialNavigator.onGenerateRoute?.call(routeSettings) != null) {
       _createPageContainer(bifrostSettings);
     }
   }
@@ -96,7 +96,7 @@ class BifrostManagerState extends State<BifrostManager> {
   /// check if page container can pop
   bool canPop(int id) {
     final container = _containers.firstWhere((e) => e.settings.id == id);
-    return BifrostContainer.stateOf(container)?.canPop();
+    return BifrostContainer.stateOf(container)?.canPop() ?? false;
   }
 
   /// pop ios view controller

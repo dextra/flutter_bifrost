@@ -5,7 +5,7 @@ class BifrostObserver extends NavigatorObserver {
 
   bool get onlyPage => _pagesIndStack == 0;
 
-  BifrostObserver(List<NavigatorObserver> observers) {
+  BifrostObserver(List<NavigatorObserver>? observers) {
     if (observers != null) {
       for (final NavigatorObserver observer in observers) {
         addProxyObserver(observer);
@@ -20,7 +20,7 @@ class BifrostObserver extends NavigatorObserver {
   }
 
   @override
-  void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     _pagesIndStack++;
     for (final NavigatorObserver observer in _proxyObservers) {
       observer.didPush(route, previousRoute);
@@ -28,7 +28,7 @@ class BifrostObserver extends NavigatorObserver {
   }
 
   @override
-  void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     _pagesIndStack--;
     for (final NavigatorObserver observer in _proxyObservers) {
       observer.didPop(route, previousRoute);
@@ -36,7 +36,7 @@ class BifrostObserver extends NavigatorObserver {
   }
 
   @override
-  void didRemove(Route<dynamic> route, Route<dynamic> previousRoute) {
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
     _pagesIndStack--;
     for (final NavigatorObserver observer in _proxyObservers) {
       observer.didRemove(route, previousRoute);
@@ -44,7 +44,7 @@ class BifrostObserver extends NavigatorObserver {
   }
 
   @override
-  void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     for (final NavigatorObserver observer in _proxyObservers) {
       observer.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     }
