@@ -11,7 +11,7 @@ class Bifrost {
 
       final manager = BifrostManager(child as Navigator);
       final content = HeroControllerScope.none(child: manager);
-      
+
       return builder?.call(context, content) ?? content;
     };
   }

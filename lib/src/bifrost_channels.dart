@@ -5,5 +5,6 @@ class BifrostChannels {
 
   static const MethodChannel common = MethodChannel('bifrost/common');
 
-  static const MethodChannel notification = MethodChannel('bifrost/notification');
+  static const MethodChannel notification =
+      MethodChannel('bifrost/notification');
 }
