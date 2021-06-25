@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 class GreetingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final settings = ModalRoute.of(context).settings;
+    final settings = ModalRoute.of(context)?.settings;
     final containerType = Platform.isIOS ? 'ViewController' : 'Activity';
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -23,7 +23,7 @@ class GreetingsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Hello, ${settings.arguments}!',
+                'Hello, ${settings?.arguments}!',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline6,
               ),

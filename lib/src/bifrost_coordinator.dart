@@ -15,11 +15,17 @@ class BifrostCoordinator {
   Future<bool> _handler(MethodCall call) async {
     log('method: ${call.method}, arguments: ${call.arguments}');
 
-    final arguments = (call.arguments as Map).cast<String, dynamic>();
-    assert(arguments != null);
+    final arguments = (call.arguments as Map?)?.cast<String, dynamic>();
+    if (arguments == null) {
+      throw ArgumentError(
+          'Call arguments are required and must be a Map<String, dynamic>.');
+    }
 
-    final id = arguments['id'] as int;
-    assert(id != null);
+    final id = arguments['id'] as int?;
+    if (id == null) {
+      throw ArgumentError(
+          'The `id` argument is required and must be an integer.');
+    }
 
     switch (call.method) {
       case 'onCreatePage':

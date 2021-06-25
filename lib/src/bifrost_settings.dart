@@ -9,20 +9,20 @@ class BifrostSettings {
   final BifrostObserver observer;
 
   BifrostSettings({
-    @required this.id,
-    @required this.route,
+    required this.id,
+    required this.route,
     this.arguments,
-    List<NavigatorObserver> observers,
+    List<NavigatorObserver>? observers,
   }) : observer = BifrostObserver(observers);
 
   factory BifrostSettings.from({
-    @required Navigator navigator,
+    required Navigator navigator,
     Map<String, dynamic> arguments = const {},
   }) =>
       BifrostSettings(
         id: arguments['id'] ?? 0,
         route: arguments['route'] ?? navigator.initialRoute,
         arguments: arguments['arguments'],
-        observers: navigator?.observers,
+        observers: navigator.observers,
       );
 }
