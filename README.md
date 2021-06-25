@@ -4,7 +4,7 @@ Bifrost is a plugin which enables easy embedding of your Flutter application int
 
 ## Requirements
 
-- Flutter 1.22.6+ on stable channel
+- Flutter 2.0.0+ on stable channel
 - iOS 10.0+ Xcode 12.0+ Swift 5+
 - Android minSdkVersion 16 Kotlin 1.3.50+
 
@@ -16,7 +16,7 @@ Add a dependency in your Flutter project
 
 ``` yaml
 dependencies:
-  bifrost: ^0.0.1
+  bifrost: ^0.1.0
 ```
 
 Initialize Bifrost on your MaterialApp or CupertinoApp
