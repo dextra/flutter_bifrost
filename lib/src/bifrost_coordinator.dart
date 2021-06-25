@@ -17,13 +17,13 @@ class BifrostCoordinator {
 
     final arguments = (call.arguments as Map?)?.cast<String, dynamic>();
     if (arguments == null) {
-      throw MissingPluginException(
+      throw ArgumentError(
           'Call arguments are required and must be a Map<String, dynamic>.');
     }
 
     final id = arguments['id'] as int?;
     if (id == null) {
-      throw MissingPluginException(
+      throw ArgumentError(
           'The `id` argument is required and must be an integer.');
     }
 
